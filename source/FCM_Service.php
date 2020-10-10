@@ -14,25 +14,28 @@ use GuzzleHttp\Psr7\Response;
 class FCM_Service {
     private $client;
 
-
     public function __construct($apiKey) {
         $this->client = new Client();
         $this->client->setApiKey($apiKey);
         $this->client->injectGuzzleHttpClient(new \GuzzleHttp\Client());
     }
-    public function sendMessage($header, $context) {
-        $notification = new Notification($header, $context);
+    public function sendMessage($notofication_title, $notification_text, $notification_data) {
+        $notification = new Notification($notofication_title, $notification_text);
         $message = new Message();
-        $message->setNotification($notification);
+        $message->setNotification($notification)->setData($notification_data);
+        $message->addRecipient(new Device('dJM4WcIAR_ied6o-E4sE4-:APA91bHtaUe9NJIrnb28UOT6LVOz0QKJaseB2WdVPsxFF4FUW8wW-nRv6lWq0zf6d2ev7lgIBEbtO3ZYuMwTcxcQIH8S0G2wH0MkKppwd9JYz40Yz9fvkXwiu5HJE1J8jHrGMb3nD5uy'));
         $message->addRecipient(new Device('df-2xWBnTweai6gFyIhhyT:APA91bHPtWNk7Ze3yJLTnXe3sqy4AV6Vr90JxZ6_CL9QWvB6Qs5nPRoXI9Q8KpUWAWE94GakwaVEfQ04vpNsuTcdnWlXKcuaOd22-p3attL8xJzEAVwjQPug0X-I03MgsAAdG4n5nYKl'));
-        $message->addRecipient(new Device('c8Q_E3oAQFeZ-mKm6G-qxQ:APA91bG-WAtzxSTfRMlg8EGuLiMBz-ZdXqVDZOCM67l-heAV7DUnum1u2IBvDc4wtVRCm0ryrPH4WLM2XcBvramJAbE6SZU5ZU_M7-vYgRh-QWu3DuiPdAGoGqkuFRKUvTelVC9E8DS8'));
-
+        
         $response = $this->client->send($message);
     }
 }
 
-
 $apiKey = 'AAAA5Yc9igw:APA91bF59c9irZ1fENJgdAXmGt3tsiyNbofia5VI97gGKe1gZQp-kBiWS3BraUVpSzCePjfMf1JKmvEPPx3nK4A3kOrh69-Pq7zDrO-SrjGwXQWcpPiPS2xnTpjLIGngLecg6yY5xLQa';
 
+$notofication_title = "Title";
+$notification_text = "Text in Notofication";
+
+$notification_data=['to'=>'Your Device', 'notification'=>'Hello to receive testing message.'];
+
 $FCM_Service = new FCM_Service($apiKey);
-$FCM_Service->sendMessage("Test Message", "This is a testing message for push notification.");
+$FCM_Service->sendMessage($notofication_title, $notification_text, $notification_data);
